@@ -65,6 +65,42 @@ router.put("/:isbn", async function (req, res, next) {
   }
 });
 
+/** PATCH /[isbn]   bookData => {book: updatedBook}  */
+
+router.patch("/:isbn", async function (req, res, next) {
+  try {
+    //validate json schema of book data
+    const validateResult = jsonschema.validate(req.body, bookSchema);
+    if(!validateResult.valid) {
+      let listOfErrors = validateResult.errors.map(error => error.stack);
+      throw new ExpressError(listOfErrors, 400);
+    }
+    
+    const book = await Book.update(req.params.isbn, req.body);
+    return res.json({ book });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+/** PUT /[isbn]   bookData => {book: updatedBook}  */
+
+router.put("/:isbn", async function (req, res, next) {
+  try {
+    //validate json schema of book data
+    const validateResult = jsonschema.validate(req.body, bookSchema);
+    if(!validateResult.valid) {
+      let listOfErrors = validateResult.errors.map(error => error.stack);
+      throw new ExpressError(listOfErrors, 400);
+    }
+    
+    const book = await Book.update(req.params.isbn, req.body);
+    return res.json({ book });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** DELETE /[isbn]   => {message: "Book deleted"} */
 
 router.delete("/:isbn", async function (req, res, next) {

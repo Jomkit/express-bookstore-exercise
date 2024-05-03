@@ -17,6 +17,7 @@
     "properties": {
         "isbn": {
             "type": "string",
+            "pattern": "^\\d+$",
             "default": "",
             "title": "The isbn Schema",
             "examples": [
