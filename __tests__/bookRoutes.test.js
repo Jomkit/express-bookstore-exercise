@@ -140,6 +140,40 @@ describe("PUT /books/:isbn", function (){
     })
 })
 
+describe("PATCH /books/:isbn", function (){
+    test("Updates a book based on isbn, sending only select data", async function() {
+        const res = await request(app).patch(`/books/${b1.isbn}`)
+            .send({"title": "Patched Books by Me"});
+            expect(res.statusCode).toEqual(200);
+            expect(res.body).toEqual(
+                {book: {
+                    isbn: '1234567890',
+                    title: 'Patched Books by Me',
+                    author: 'JRR Tolkien',
+                    year: 1937,
+                    pages: 220,
+                    publisher: 'HarperCollins',
+                    language: 'English',
+                    amazon_url: 'https://www.amazon.com/Hobbit-JRR-Tolkien-ebook/dp/B004K19Y76'
+                }}
+            );
+    })
+
+    describe("PATCH /books/:isbn Errors", function(){
+        test("404 Error if isbn not found", async function(){
+            const res = await request(app).patch(`/books/sadfasdf`)
+                .send({title: "Test Title"});
+
+            expect(res.statusCode).toEqual(404);
+        })
+        test("Update fails if invalid data sent", async function() {
+            const res = await request(app).patch(`/books/${b1.isbn}`)
+                .send({"pages": "fasdfsdf"});
+                expect(res.statusCode).toEqual(400);
+        })
+    })
+})
+
 describe("DELETE /books/:isbn", function() {
     test("Deletes a book based on isbn", async function() {
         const res = await request(app).delete(`/books/${b1.isbn}`);

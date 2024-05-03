@@ -105,6 +105,7 @@ class Book {
    * */
 
   static async update(isbn, data) {
+  
     const result = await db.query(
       `UPDATE books SET 
             amazon_url=($1),
